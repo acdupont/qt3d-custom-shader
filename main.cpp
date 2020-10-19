@@ -35,6 +35,9 @@
 #include <QCommandLinkButton>
 #include <QPushButton>
 
+#include "print.h"
+
+
 int main(int argc, char *argv[])
 {
     // Application
@@ -202,25 +205,30 @@ int main(int argc, char *argv[])
 
     // Signal and slot for widgets
     QObject::connect(randomSizeButton, &QPushButton::clicked, rootEntity, [ = ]{
+        PRINT_DEBUG("\n");
         int randomNumber = (qrand() % (20)) * 10 + 10; // Random number multiple of 10 between 0 to 200, mull
         billboardMaterial->setSize(QSizeF(randomNumber, randomNumber));
 
     });
 
     QObject::connect(biggerSizeButton, &QPushButton::clicked, rootEntity, [ = ]{
+        PRINT_DEBUG("\n");
         billboardMaterial->setSize(billboardMaterial->size() + QSizeF(10, 10));
     });
 
     QObject::connect(smallerSizeButton, &QPushButton::clicked, rootEntity, [ = ]{
+        PRINT_DEBUG("\n");
         // Minus size --> reverse the orientation of the image
         billboardMaterial->setSize(billboardMaterial->size() - QSizeF(10, 10));
     });
 
     QObject::connect(successKidButton, &QPushButton::clicked, rootEntity, [ = ]{
+        PRINT_DEBUG("\n");
         billboardMaterial->setTexture2DFromImagePath(QStringLiteral( "qrc:/shaders/success-kid.png"));
     });
 
     QObject::connect(qgisIDButton, &QPushButton::clicked, rootEntity, [ = ]{
+        PRINT_DEBUG("\n");
         billboardMaterial->setTexture2DFromImagePath(QStringLiteral( "qrc:/shaders/QGIS-ID.png"));
     });
 

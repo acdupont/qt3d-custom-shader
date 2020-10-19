@@ -11,6 +11,8 @@
 #include <QVariant>
 
 #include "billboardmaterial.h"
+#include "print.h"
+
 
 BillboardMaterial::BillboardMaterial()
     : mSize( new Qt3DRender::QParameter( "BB_SIZE", QSizeF(100, 100), this ) )
@@ -36,6 +38,10 @@ BillboardMaterial::BillboardMaterial()
 
     // Shader program
     Qt3DRender::QShaderProgram *shaderProgram = new Qt3DRender::QShaderProgram( this );
+	connect(shaderProgram, &Qt3DRender::QShaderProgram::logChanged,              this, &BillboardMaterial::onLogChanged);
+	connect(shaderProgram, &Qt3DRender::QShaderProgram::vertexShaderCodeChanged, this, &BillboardMaterial::onVertexShaderCodeChanged);
+	connect(shaderProgram, &Qt3DRender::QShaderProgram::statusChanged,           this, &BillboardMaterial::onStatusChanged);
+    
     shaderProgram->setVertexShaderCode( Qt3DRender::QShaderProgram::loadSource( QUrl( QStringLiteral( "qrc:/shaders/billboards.vert" ) ) ) );
     shaderProgram->setFragmentShaderCode( Qt3DRender::QShaderProgram::loadSource( QUrl( QStringLiteral( "qrc:/shaders/billboards.frag" ) ) ) );
     shaderProgram->setGeometryShaderCode( Qt3DRender::QShaderProgram::loadSource( QUrl( QStringLiteral( "qrc:/shaders/billboards.geom" ) ) ) );
@@ -63,6 +69,8 @@ BillboardMaterial::BillboardMaterial()
     effect->addTechnique(technique);
 
     setEffect( effect );
+    PRINT_DEBUG("shader log") << shaderProgram->log();
+    PRINT_DEBUG("shader status") << shaderProgram->status();
 }
 
 void BillboardMaterial::setSize(const QSizeF size)
@@ -111,4 +119,23 @@ void BillboardMaterial::setTexture2DFromImagePath(QString imagePath)
     texture2D->addTextureImage(image);
 
     setTexture2D(texture2D);
+}
+
+
+void BillboardMaterial::onLogChanged(const QString& log)
+{
+	PRINT_DEBUG("BillboardMaterial::logChanged");
+	PRINT_DEBUG(log);
+}
+
+
+void BillboardMaterial::onVertexShaderCodeChanged(const QByteArray& vertexShaderCode)
+{
+	PRINT_DEBUG("BillboardMaterial::onVertexShaderCodeChanged");
+}
+
+
+void BillboardMaterial::onStatusChanged(Qt3DRender::QShaderProgram::Status status)
+{
+	PRINT_DEBUG("BillboardMaterial::statusChanged") << status;
 }
